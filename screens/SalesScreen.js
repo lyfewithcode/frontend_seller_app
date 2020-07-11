@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { 
     View, 
     Text,
@@ -16,10 +16,6 @@ import { Card, Avatar, IconButton } from 'react-native-paper';
 
 
 const SalesScreen = ({navigation}) => {
-    const [state, setState] = useState({
-        title: "Tuesday"
-    })
-
 
   const { colors } = useTheme();
 
@@ -38,7 +34,7 @@ const SalesScreen = ({navigation}) => {
         <ScrollView>
         <Card>
             <Card.Title
-            title={state.title}
+            title="Tuesday"
             subtitle="March 2020"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
             right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}

@@ -70,6 +70,20 @@ const AddProductScreen = ({navigation}) => {
             </View>
             <Text style={[styles.text_footer, {
                 marginTop: 25
+            }]}>Color</Text>
+            <View style={styles.action}>
+                <Picker style={styles.dropdown}>
+                    <Picker.Item label="Black" value="1" />
+                    <Picker.Item label="White" value="2" />
+                    <Picker.Item label="Blue" value="3" />
+                    <Picker.Item label="Red" value="4" />
+                    <Picker.Item label="Green" value="5" />
+                    <Picker.Item label="Purple" value="6" />
+                    <Picker.Item label="Other" value="7" />
+                </Picker>
+            </View>
+            <Text style={[styles.text_footer, {
+                marginTop: 25
             }]}>Unique Point Selling</Text>
             <View style={styles.action}>
                 <TextInput 
@@ -78,6 +92,41 @@ const AddProductScreen = ({navigation}) => {
                     autoCapitalize="none"
                     // onChangeText={(val) => textInputChange(val)}
                 />
+            </View>
+            <Text style={[styles.text_footer, {
+                marginTop: 25
+            }]}>Warranty</Text>
+            <View style={styles.action}>
+                <Picker style={styles.dropdown}>
+                    <Picker.Item label="Garansi International" value="1" />
+                    <Picker.Item label="Garansi Resmi" value="2" />
+                    <Picker.Item label="Garansi Distributor" value="3" />
+                    <Picker.Item label="Garansi Toko" value="4" />
+                    <Picker.Item label="-" value="5" />
+                </Picker>
+            </View>
+            <Text style={[styles.text_footer, {
+                marginTop: 25
+            }]}>Period</Text>
+            <View style={styles.action}>
+                <Picker style={styles.dropdown}>
+                    <Picker.Item label="-" value="1" />
+                    <Picker.Item label="10 Tahun" value="2" />
+                    <Picker.Item label="18 Bulan" value="3" />
+                    <Picker.Item label="1 Bulan" value="4" />
+                    <Picker.Item label="1 Tahun" value="5" />
+                    <Picker.Item label="2 Tahun" value="6" />
+                    <Picker.Item label="3 Tahun" value="7" />
+                    <Picker.Item label="4 Tahun" value="2" />
+                    <Picker.Item label="5 Tahun" value="3" />
+                    <Picker.Item label="6 Bulan" value="4" />
+                    <Picker.Item label="15 Bulan" value="5" />
+                    <Picker.Item label="8 Tahun" value="6" />
+                    <Picker.Item label="9 Tahun" value="7" />
+                    <Picker.Item label="Lifetime Warranty" value="5" />
+                    <Picker.Item label="2x24 jam" value="6" />
+                    <Picker.Item label="7 hari" value="7" />
+                </Picker>
             </View>
             <Text style={[styles.text_footer, {
                 marginTop: 25
