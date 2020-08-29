@@ -41,7 +41,6 @@ const SearchScreen = ({navigation}) => {
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
@@ -52,7 +51,6 @@ const SearchScreen = ({navigation}) => {
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
@@ -63,7 +61,6 @@ const SearchScreen = ({navigation}) => {
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>

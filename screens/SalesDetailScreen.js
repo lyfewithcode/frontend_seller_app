@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -11,19 +11,42 @@ import {
   StatusBar,
   TextInput } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import { useTheme } from '@react-navigation/native';
+import { useTheme, useIsFocused } from '@react-navigation/native';
 import {Picker} from '@react-native-community/picker';
-import LinearGradient from 'react-native-linear-gradient';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Axios from 'axios'
+import {urlDevice, urlEmulator} from './url'
+import moment from 'moment';
 
-const TransactionDetailScreen = ({navigation}) => {
+const SalesDetailScreen = ({navigation, route}) => {
 
   const { colors } = useTheme();
 
   const theme = useTheme();
+
+  const [refreshing, setRefreshing] = useState(false);
+  const [dataTransaction, setDataTransaction] = useState([])
+  const getTransaction = async () => {
+    const {transaction_id} = route.params
+      setRefreshing(true)
+      let url = urlEmulator;
+      await Axios.get(url + "/transaction/" + transaction_id)
+      .then(res => {
+          console.log(res.data.data)
+        setDataTransaction(res.data.data)
+        setRefreshing(false)
+      })
+      .catch(err=>{
+        setRefreshing(false)
+      })
+  }
+  useEffect(() => {
+      getTransaction()
+  }, [route.params])
     
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor='#008adc' barStyle="light-content"/>
+        <StatusBar backgroundColor='#2431a8' barStyle="light-content"/>
         <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
             <Appbar.Content
@@ -43,30 +66,36 @@ const TransactionDetailScreen = ({navigation}) => {
                     placeholder="Rp 2,699,000"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    value={dataTransaction.price + ""}
                     // onChangeText={(val) => textInputChange(val)}
                 />
             </View>
             <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Category</Text>
-            <View style={styles.action}>
-                <Picker style={styles.dropdown}>
-                    <Picker.Item label="Smartphone" value="smartphone" />
-                    <Picker.Item label="Accessories" value="accessories" />
-                    <Picker.Item label="Others" value="others" />
-                </Picker>
-            </View>
-            <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Product Name</Text>
-            <View style={styles.action}>
-                <TextInput 
-                    placeholder="Rp 2,699,000"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                />
-            </View>
+                marginTop: 25,marginBottom: 10
+            }]}>Product List</Text>
+            {
+                dataTransaction.product.map((item, i) => {
+                    return (
+                        <View key={item.product_id}>
+                            <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
+                            <FontAwesome 
+                                name="user-o"
+                                color="#05375a"
+                                size={20}
+                            />
+                                <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
+                                    {item.product_name}
+                                </Text>
+                            </View>
+                            <View style={{flexDirection: 'row', marginTop: 5, paddingBottom: 20}}>
+                                <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>{item.category_name}</Text>
+                            </View>
+                        </View>
+                    )
+                })
+            }
+            
+
             <Text style={[styles.text_footer, {
                 marginTop: 25
             }]}>Date</Text>
@@ -75,18 +104,24 @@ const TransactionDetailScreen = ({navigation}) => {
                     placeholder="Today"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    value={moment(dataTransaction.created_date).format("dddd, DD MMMM YYYY")}
                     // onChangeText={(val) => textInputChange(val)}
                 />
+            </View>
+            <Text style={[styles.text_footer, {
+                marginTop: 25
+            }]}>Payment</Text>
+            <View style={styles.action}>
+                <Picker style={styles.dropdown}>
+                    <Picker.Item label={dataTransaction.payment_name} value="payment" />
+                </Picker>
             </View>
             <Text style={[styles.text_footer, {
                 marginTop: 25
             }]}>Customer</Text>
             <View style={styles.action}>
                 <Picker style={styles.dropdown}>
-                    <Picker.Item label="Customer" value="customer" />
-                    <Picker.Item label="Branch Store" value="branchStore" />
-                    <Picker.Item label="Online Store" value="onlineStore" />
-                    <Picker.Item label="Others" value="others" />
+                    <Picker.Item label={dataTransaction.customer_name} value="customer" />
                 </Picker>
             </View>
             <Text style={[styles.text_footer, {
@@ -97,36 +132,9 @@ const TransactionDetailScreen = ({navigation}) => {
                     placeholder="Optional"
                     style={styles.textInput}
                     autoCapitalize="none"
+                    value={dataTransaction.notes}
                     // onChangeText={(val) => textInputChange(val)}
                 />
-            </View>
-            <View style={styles.button}>
-                <TouchableOpacity
-                    style={styles.signIn}
-                    onPress={() => {}}
-                >
-                <LinearGradient
-                    colors={['#02b6ff', '#008adc']}
-                    style={styles.signIn}
-                >
-                    <Text style={[styles.textSign, {
-                        color:'#fff'
-                    }]}>Save</Text>
-                </LinearGradient>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={[styles.signIn, {
-                        borderColor: '#008adc',
-                        borderWidth: 1,
-                        marginTop: 15
-                    }]}
-                >
-                    <Text style={[styles.textSign, {
-                        color: '#008adc'
-                    }]}>Cancel</Text>
-                </TouchableOpacity>
             </View>
 
         </ScrollView>
@@ -135,7 +143,7 @@ const TransactionDetailScreen = ({navigation}) => {
     );
   };
 
-export default TransactionDetailScreen;
+export default SalesDetailScreen;
 
 const styles = StyleSheet.create({
   container: {

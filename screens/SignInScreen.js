@@ -113,8 +113,8 @@ const SignInScreen = ({navigation}) => {
         // }
         // signIn(foundUser);
 
-        // let url = "http://10.0.2.2:3000"; //untuk emulator
-        let url = "http://192.168.43.13:3000" // untuk device oppo
+        let url = "http://10.0.2.2:3000"; //untuk emulator
+        // let url = "http://192.168.43.13:3000" // untuk device oppo
         const data_input = {
             email : email,
             password : password

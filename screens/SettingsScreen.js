@@ -1,36 +1,49 @@
-import * as React from 'react';
-import { List, Checkbox } from 'react-native-paper';
-
-const state = {
-  expanded: true
-};
-
-const _handlePress = () =>
-  this.setState({
-    expanded: !this.state.expanded
-  });
+import React, {useState} from 'react';
+import {View, Button, Platform} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const SettingsScreen = () => {
-    return (
-      <List.Section title="Accordions">
-        <List.Accordion
-          title="Uncontrolled Accordion"
-          // left={props => <List.Icon {...props} icon="folder" />}
-        >
-          <List.Item title="First item" />
-          <List.Item title="Second item" />
-        </List.Accordion>
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
 
-        <List.Accordion
-          title="Controlled Accordion"
-          // left={props => <List.Icon {...props} icon="folder" />}
-          // expanded={this.state.expanded}
-          // onPress={this._handlePress}
-        >
-          <List.Item title="First item" />
-          <List.Item title="Second item" />
-        </List.Accordion>
-      </List.Section>
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
+    return (
+      <View>
+      <View>
+        <Button onPress={showDatepicker} title="Show date picker!" />
+      </View>
+      <View>
+        <Button onPress={showTimepicker} title="Show time picker!" />
+      </View>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
+    </View>
     );
 };
 

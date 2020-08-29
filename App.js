@@ -23,7 +23,7 @@ import SearchProductScreen from './screens/SearchProductScreen';
 import AddProductScreen from './screens/AddProductScreen';
 import AddTransactionScreen from './screens/AddTransactionScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
-import TransactionDetailScreen from './screens/TransactionDetailScreen';
+import SalesDetailScreen from './screens/SalesDetailScreen';
 import UpdateProductScreen from './screens/UpdateProductScreen';
 
 import { AuthContext } from './components/context';
@@ -108,13 +108,15 @@ const App = () => {
     signIn: async(foundUser) => {
       // setUserToken('fgkj');
       // setIsLoading(false);
-      const userToken = String(foundUser.userToken);
+      const userToken = String(foundUser.token);
       const userEmail = foundUser.email;
       const userName = foundUser.name;
+      const userId = ""+ foundUser.user_id;
       
       try {
         // await AsyncStorage.setItem('userToken', userToken);
         let setdata = [
+          ["user_id", userId],
           ["name", userName],
           ["email", userEmail],
           ["userToken", userToken]
@@ -181,7 +183,7 @@ const App = () => {
           <Drawer.Screen name="SearchTransactionScreen" component={SearchTransactionScreen} />
           <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
           <Drawer.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
-          <Drawer.Screen name="TransactionDetailScreen" component={TransactionDetailScreen} />
+          <Drawer.Screen name="SalesDetailScreen" component={SalesDetailScreen} />
           <Drawer.Screen name="UpdateProductScreen" component={UpdateProductScreen} />
         </Drawer.Navigator>
       )

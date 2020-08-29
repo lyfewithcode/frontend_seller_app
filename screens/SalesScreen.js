@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { 
     View, 
     Text,
@@ -11,9 +11,12 @@ import {
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useTheme } from '@react-navigation/native';
 import { Card, Avatar, IconButton } from 'react-native-paper';
-
+import { useTheme, useIsFocused } from '@react-navigation/native';
+import Axios from 'axios'
+import {urlDevice, urlEmulator} from './url'
+import AsyncStorage from '@react-native-community/async-storage';
+import moment from 'moment';
 
 const SalesScreen = ({navigation}) => {
 
@@ -24,6 +27,27 @@ const SalesScreen = ({navigation}) => {
   const state = {
     searchQuery: '',
   };
+
+  const isVisibel = useIsFocused();
+  const [refreshing, setRefreshing] = useState(false);
+  const [dataTransaction, setDataTransaction] = useState([])
+  const getTransaction = async () => {
+    let user_id = await AsyncStorage.getItem('user_id');
+      setRefreshing(true)
+      let url = urlEmulator;
+      await Axios.get(url + "/transaction?store_id=" + user_id)
+      .then(res => {
+        setDataTransaction(res.data.data)
+        setRefreshing(false)
+      })
+      .catch(err=>{
+        setRefreshing(false)
+      })
+  }
+  useEffect(() => {
+      getTransaction()
+  }, [isVisibel])
+  
     
     return (
         <View style={styles.container}>
@@ -32,145 +56,42 @@ const SalesScreen = ({navigation}) => {
             style={styles.footer}
         >
         <ScrollView>
-        <Card>
-            <Card.Title
-            title="Tuesday"
-            subtitle="March 2020"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
-        />
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Oppo A5 2020 Smartphone - 4/64 GB
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5, paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Smartphone</Text>
-        </View>
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Tempered Glass
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5,  borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Accessories</Text>
-        </View>
-        </Card>
-
-        <Card>
-            <Card.Title
-            title="Tuesday"
-            subtitle="March 2020"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
-        />
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Oppo A5 2020 Smartphone - 4/64 GB
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5, paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Smartphone</Text>
-        </View>
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Tempered Glass
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5,  borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Accessories</Text>
-        </View>
-        </Card>
-
-        <Card>
-            <Card.Title
-            title="Tuesday"
-            subtitle="March 2020"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
-        />
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Oppo A5 2020 Smartphone - 4/64 GB
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5, paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Smartphone</Text>
-        </View>
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Tempered Glass
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5,  borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Accessories</Text>
-        </View>
-        </Card>
-
-        <Card>
-            <Card.Title
-            title="Tuesday"
-            subtitle="March 2020"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => {}} />}
-        />
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Oppo A5 2020 Smartphone - 4/64 GB
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5, paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Smartphone</Text>
-        </View>
-        <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
-            <FontAwesome 
-                name="user-o"
-                color="#05375a"
-                size={20}
-            />
-            <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
-                Tempered Glass
-            </Text>
-        </View>
-        <View style={{flexDirection: 'row', marginTop: 5,  borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingBottom: 20}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Accessories</Text>
-        </View>
-        </Card>
+        {
+            dataTransaction.map((item, index) => {
+                return (
+                    <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("SalesDetailScreen", {transaction_id: item.transaction_id})} key={item.transaction_id}>
+                        <Card.Title
+                        title={moment(item.created_date).format("dddd")}
+                        subtitle={moment(item.created_date).format("MMMM YYYY")}
+                        left={(props) => <Text style={{fontSize:27, fontWeight: 'bold', alignSelf: 'center'}}>{moment(item.created_date).format("DD")}</Text>}
+                        right={(props) => <IconButton {...props} icon="more" />}
+                    />
+                    {
+                        item.product.map((product, i) => {
+                            return (
+                                <View key={product.product_id}>
+                                <View style={{flexDirection: 'row', paddingLeft: 27, paddingBottom: 5}}>
+                                    <FontAwesome 
+                                        name="user-o"
+                                        color="#05375a"
+                                        size={20}
+                                    />
+                                    <Text style={{color: '#05375a', fontSize: 16, paddingLeft: 30, fontWeight: 'bold'}}>
+                                        {product.product_name}
+                                    </Text>
+                                </View>
+                                <View style={{flexDirection: 'row', marginTop: 5, paddingBottom: 20}}>
+                                    <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>{product.category_name}</Text>
+                                </View>
+                                </View>
+                            )
+                        })
+                    }
+                        
+                    </Card>
+                )
+            })
+        }
         </ScrollView>
             <TouchableOpacity
             activeOpacity={0.7}

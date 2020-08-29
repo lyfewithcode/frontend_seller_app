@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { 
     View, 
     Text,
@@ -8,22 +8,42 @@ import {
     StyleSheet,
     ScrollView,
     StatusBar,
-    List
+    List,
+    RefreshControl
 } from 'react-native';
 
 import { Card, Avatar, IconButton } from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useTheme } from '@react-navigation/native';
-
+import { useTheme, useIsFocused } from '@react-navigation/native';
+import Axios from 'axios'
+import {urlDevice, urlEmulator} from './url'
 const ProductScreen = ({navigation}) => {
-    
-  const { colors } = useTheme();
+    const isVisibel = useIsFocused();
+    const [refreshing, setRefreshing] = useState(false);
+    const { colors } = useTheme();
 
-  const theme = useTheme();
+    const [dataProduct, setDataProduct] = useState([])
+    const getProduct = async () => {
+        setRefreshing(true)
+        let url = urlEmulator;
+        await Axios.get(url + "/product")
+        .then(res => {
+            setDataProduct(res.data.data)
+            setRefreshing(false)
+        })
+        .catch(err=>{
+            setRefreshing(false)
+        })
+    }
+    useEffect(() => {
+        getProduct()
+    }, [isVisibel])
 
-  const state = {
-    searchQuery: '',
-  };
+    const theme = useTheme();
+
+    const state = {
+        searchQuery: '',
+    };
     
     return (
         <View style={styles.container}>
@@ -31,77 +51,83 @@ const ProductScreen = ({navigation}) => {
         <View 
             style={styles.footer}
         >
-        <ScrollView>
-        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
+        <ScrollView
+            refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={() => getProduct()} />
+          }>
+        {
+            dataProduct.map((item, index) => {
+                return (
+                    <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("ProductDetailScreen", {product_id : item.product_id})} key={item.product_id}>
+                        <Card.Title
+                        title={item.product_name}
+                        subtitle={item.price}
+                        left={(props) => <Image source={{uri : urlEmulator + "/product/image/" + item.picture}} style={{resizeMode: 'cover', width: 50, height: 50}}/>}
+                        right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("UpdateProductScreen", {product_id : item.product_id})} />}
+                    />
+                    <View style={{flexDirection: 'row', paddingBottom: 15}}>
+                        <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>{item.stock !== null || item.stock !== null ? item.stock : "Not"} Available</Text>
+                    </View>
+                    </Card>
+                )
+            })
+        }
+        
+
+        {/* <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("ProductDetailScreen")}>
             <Card.Title
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
+            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("UpdateProductScreen")} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
         </View>
         </Card>
-        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
+
+        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("ProductDetailScreen")}>
             <Card.Title
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
-        />
-        <View style={{flexDirection: 'row', paddingBottom: 15}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
-        </View>
-        </Card><Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
-            <Card.Title
-            title="Oppo A5 2020 Smartphone"
-            subtitle="Rp 2,199,000"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
-        />
-        <View style={{flexDirection: 'row', paddingBottom: 15}}>
-            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
-        </View>
-        </Card><Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
-            <Card.Title
-            title="Oppo A5 2020 Smartphone"
-            subtitle="Rp 2,199,000"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
+            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("UpdateProductScreen")} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
         </View>
         </Card>
-        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
+
+        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("ProductDetailScreen")}>
             <Card.Title
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
+            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("UpdateProductScreen")} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
         </View>
         </Card>
-        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
+
+        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("ProductDetailScreen")}>
             <Card.Title
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
+            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("UpdateProductScreen")} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
         </View>
         </Card>
-        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("TransactionDetailScreen")}>
+
+        <Card style={{marginBottom: 10}} onPress={() => navigation.navigate("ProductDetailScreen")}>
             <Card.Title
             title="Oppo A5 2020 Smartphone"
             subtitle="Rp 2,199,000"
             left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("TransactionDetailScreen")} />}
+            right={(props) => <IconButton {...props} icon="more" onPress={() => navigation.navigate("UpdateProductScreen")} />}
         />
         <View style={{flexDirection: 'row', paddingBottom: 15}}>
             <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>20 Available</Text>
@@ -201,7 +227,7 @@ const ProductScreen = ({navigation}) => {
         <View style={{flexDirection: 'row', marginTop: 5, borderBottomWidth: 1, borderBottomColor: '#f2f2f2', paddingBottom: 20}}>
             
             <Text style={{color: '#05375a', paddingLeft: 28}}>20 Available</Text>
-        </View>
+        </View> */}
 
         
         </ScrollView>

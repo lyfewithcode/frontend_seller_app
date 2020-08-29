@@ -156,7 +156,7 @@ const SignInScreen = ({navigation}) => {
 
             <Text style={[styles.text_footer, {
                 marginTop: 25
-            }]}>Name</Text>
+            }]}>Store Name</Text>
             <View style={styles.action}>
                 <FontAwesome 
                     name="user-o"
@@ -164,7 +164,7 @@ const SignInScreen = ({navigation}) => {
                     size={20}
                 />
                 <TextInput 
-                    placeholder="Your Name"
+                    placeholder="Your Store"
                     style={styles.textInput}
                     autoCapitalize="none"
                     onChangeText={(val) => textInputChange(val)}

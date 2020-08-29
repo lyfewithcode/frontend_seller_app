@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,26 +9,59 @@ import {
   Button,
   ScrollView,
   StatusBar,
+  Platform,
   TextInput } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Card, Avatar, IconButton } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
-import {Picker} from '@react-native-community/picker';
-import LinearGradient from 'react-native-linear-gradient';
+import {urlEmulator, urlDevice} from './url';
+import Axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const ProductDetailScreen = ({navigation}) => {
+const ProductDetailScreen = ({navigation, route}) => {
 
   const { colors } = useTheme();
-
+  
+  const [idProduct, setIdProduct] = useState('');
+  const [nameProduct, setNameProduct] = useState('');
+  const [categoryId, setCategoryId] = useState(0);
+  const [priceProduct, setPriceProduct] = useState("");
+  const [spesification, setSpesification] = useState('');
+  const [warrantyId, setWarrantyId] = useState(0);
+  const [notes, setNotes] = useState('');
+  const [periodId, setPeriodId] = useState(0);
+  const [stockProduct, setStock] = useState(0);
   const theme = useTheme();
 
-    
+  useEffect(() => {
+    const {product_id} = route.params
+    setIdProduct(product_id)
+    const getDataProduct = async () => {
+        let url = urlEmulator
+        await Axios.get(url + "/product/" + product_id)
+        .then(res => {
+            console.log(res.data.data.price)
+            if(res.data.status == 200) {
+                setNameProduct(res.data.data.product_name)
+                setCategoryId(res.data.data.category_id)
+                setPriceProduct(res.data.data.price)
+                setSpesification(res.data.data.spesification)
+                setWarrantyId(res.data.data.warranty_id)
+                setNotes(res.data.data.notes)
+                setPeriodId(res.data.data.period_id)
+                setStock(res.data.data.stock)
+            }
+        })
+    }
+    getDataProduct()
+  }, [route.params])
+
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor='#008adc' barStyle="light-content"/>
+        <StatusBar backgroundColor='#2431a8' barStyle="light-content"/>
         <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
             <Appbar.Content
-                title="Detail Product"
+                title="Product Detail"
                 // subtitle="Subtitle"
                 />
         </Appbar.Header>
@@ -36,100 +69,34 @@ const ProductDetailScreen = ({navigation}) => {
             style={styles.footer}
         >
         <ScrollView>
-        <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Product Name</Text>
-            <View style={styles.action}>
-                <TextInput 
-                    placeholder="Product Name"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                />
-            </View>
-            <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Price</Text>
-            <View style={styles.action}>
-                <TextInput 
-                    placeholder="Rp 2,699,000"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                />
-            </View>
-            <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Category</Text>
-            <View style={styles.action}>
-                <Picker style={styles.dropdown}>
-                    <Picker.Item label="Smartphone" value="smartphone" />
-                    <Picker.Item label="Accessories" value="accessories" />
-                    <Picker.Item label="Others" value="others" />
-                </Picker>
-            </View>
-            <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Unique Point Selling</Text>
-            <View style={styles.action}>
-                <TextInput 
-                    placeholder="Description"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                />
-            </View>
-            <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Date</Text>
-            <View style={styles.action}>
-                <TextInput 
-                    placeholder="Today"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                />
-            </View>
-            <Text style={[styles.text_footer, {
-                marginTop: 25
-            }]}>Notes</Text>
-            <View style={styles.action}>
-                <TextInput 
-                    placeholder="Optional"
-                    style={styles.textInput}
-                    autoCapitalize="none"
-                    // onChangeText={(val) => textInputChange(val)}
-                />
-            </View>
-            <View style={styles.button}>
-                <TouchableOpacity
-                    style={styles.signIn}
-                    onPress={() => {}}
-                >
-                <LinearGradient
-                    colors={['#02b6ff', '#008adc']}
-                    style={styles.signIn}
-                >
-                    <Text style={[styles.textSign, {
-                        color:'#fff'
-                    }]}>Save Product</Text>
-                </LinearGradient>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={[styles.signIn, {
-                        borderColor: '#008adc',
-                        borderWidth: 1,
-                        marginTop: 15
-                    }]}
-                >
-                    <Text style={[styles.textSign, {
-                        color: '#008adc'
-                    }]}>Cancel</Text>
-                </TouchableOpacity>
-            </View>
-
+        <Card style={{marginBottom: 10}}>
+            <Card.Title
+            title={nameProduct}
+            subtitle={priceProduct}
+            left={(props) => <Avatar.Icon {...props} icon="folder" />}
+        />
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>{stockProduct !== null || stockProduct !== null ? stockProduct : "Not"} Available</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Category: {categoryId}</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Stock: {stockProduct}</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Unique Point Selling: {spesification}</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Warranty: {warrantyId}</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Period: {periodId}</Text>
+        </View>
+        <View style={{flexDirection: 'row', paddingBottom: 15}}>
+            <Text style={{color: '#05375a', paddingLeft: 72, fontWeight: 'bold'}}>Notes: {notes} {(val) => setNotes(val)}</Text>
+        </View>
+        </Card>
         </ScrollView>
         </View>
         </View>
@@ -151,12 +118,7 @@ const styles = StyleSheet.create({
   },
   footer: {
       flex: 1,
-      backgroundColor: '#fff',
-      paddingLeft: 20,
-      paddingRight: 20,
-      // borderTopLeftRadius: 10,
-      // borderTopRightRadius: 10,
-      
+      backgroundColor: '#fff'      
   },
   text_header: {
       color: '#fff',
